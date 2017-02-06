@@ -1,10 +1,11 @@
 ---
-title: "\U0001D67F\U0001D670\U0001D7F7_\U0001D69D\U0001D68E\U0001D696\U0001D699\U0001D695\U0001D68A\U0001D69D\U0001D68E.\U0001D681\U0001D696\U0001D68D"
-author: "Joseph M. Kamt"
-date: "5/2/2017"
-output: html_document
+output: 
+  html_document: 
+    fig_height: 4
+    fig_width: 6
+    keep_md: yes
+    toc_depth: 3
 ---
-
 #Peer-graded Assignment: Course Project 1
 
 ```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -13,13 +14,12 @@ library(dplyr)
 library(data.table)
 library(lubridate)
 library(lattice)
-knitr::opts_chunk$set(dev="png")
 ```
 
 
 ##1. Code for reading in the data set and/or processing the data
 ####Downloading file and loading data frame in working directory
-```{r STEP1, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP1, echo=TRUE}
 Url <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 download.file(Url, destfile = "./monitoring_data.zip", method = "curl")
 unzip("monitoring_data.zip")
@@ -28,7 +28,7 @@ activity <- read.table(file = "./activity.csv", header = T, sep = ",")
 
 
 ####Setting a column with the proper date format and df with non NA
-```{r STEP2, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP2, echo=TRUE}
 activity$date <- ymd(activity$date)
 activity2 <- subset(activity, !is.na(activity[,1]))
 ```
@@ -36,7 +36,7 @@ activity2 <- subset(activity, !is.na(activity[,1]))
 
 ##2. Histogram of the total number of steps taken each day
 ####Plotting data
-```{r STEP3, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP3, echo=TRUE}
 step_two <- aggregate(data=activity2, steps ~ date, FUN = "sum")
 hist(step_two$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 ```
@@ -44,7 +44,7 @@ hist(step_two$steps, main = "Histogram of the total number of steps taken each d
 
 ##3. Mean and median number of steps taken each day
 ####Setting Mean and Median
-```{r STEP4, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP4, echo=TRUE}
 mean(step_two$steps)
 median(step_two$steps)
 ```
@@ -52,7 +52,7 @@ median(step_two$steps)
 
 ##4. Time series plot of the average number of steps taken
 ####Aggregating data and setting ggplot
-```{r STEP5, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP5, echo=TRUE}
 step_interval <- aggregate(data=activity2, steps ~ interval, FUN = "mean")
 ggplot(step_interval, aes(x=interval, y=steps)) + geom_line(color="steelblue", size=0.5) + labs(title="Time series plot of the average number of steps taken", x="Set Interval", y="Avg. Number of Steps") + theme_minimal()
 ```
@@ -60,7 +60,7 @@ ggplot(step_interval, aes(x=interval, y=steps)) + geom_line(color="steelblue", s
 
 ##The 5-minute interval that, on average, contains the maximum number of steps
 ####Setting code
-```{r STEP6, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP6, echo=TRUE}
 info <- step_interval[which.max(step_interval$steps),]
 info1 <- info$interval
 info2 <- info$steps
@@ -71,7 +71,7 @@ The number `r info1` interval has the most number of steps (max), with
 
 ##Code to describe and show a strategy for imputing missing data
 ####Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NA
-```{r STEP7, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP7, echo=TRUE}
 sum(is.na(activity))
 ```
 2304 missing values exist in the dataset provided
@@ -80,7 +80,7 @@ sum(is.na(activity))
 We will proceed to fill in the missing values with the average steps of the available data. 
 
 ####Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r STEP8, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP8, echo=TRUE}
 activity3 <- subset(activity, is.na(activity[,1]))
 activity4 <- merge(activity3, step_interval, by="interval")
 activity5 <- select(activity4, c(4, 3, 1))
@@ -90,7 +90,7 @@ sum(is.na(activity_final))
 ```
 
 ####Make a histogram of the total number of steps taken each day
-```{r STEP9, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP9, echo=TRUE}
 step_nine <- aggregate(data=activity_final, steps ~ date, FUN = "sum")
 hist(step_nine$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 mean(step_nine$steps)
@@ -101,7 +101,7 @@ Setting up the non-missing values with average values generates a bias towards n
 
 ##Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 ####Create a new factor variable in the dataset
-```{r STEP10, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP10, echo=TRUE}
 activity2$week <- weekdays(activity2$date)
 activity2$weekcat <- ""
 activity2[activity2$week == "Saturday" | activity2$week == "Sunday", ]$weekcat <- "weekend"
@@ -109,7 +109,7 @@ activity2[!(activity2$week == "Saturday" | activity2$week == "Sunday"), ]$weekca
 activity2$weekcat <- factor(activity2$weekcat)
 ```
 
-```{r STEP11, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
+```{r STEP11, echo=TRUE}
 step_eleven <- aggregate(data=activity2, steps ~ interval + weekcat, FUN=mean)
 xyplot(steps ~ interval | weekcat, data = step_eleven, type = "l", lwd = 2,
        layout = c(1, 2), 
