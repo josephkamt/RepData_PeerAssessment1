@@ -13,12 +13,13 @@ library(dplyr)
 library(data.table)
 library(lubridate)
 library(lattice)
+knitr::opts_chunk$set(dev="png")
 ```
 
 
 ##1. Code for reading in the data set and/or processing the data
 ####Downloading file and loading data frame in working directory
-```{r STEP1, echo=TRUE}
+```{r STEP1, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 Url <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 download.file(Url, destfile = "./monitoring_data.zip", method = "curl")
 unzip("monitoring_data.zip")
@@ -27,7 +28,7 @@ activity <- read.table(file = "./activity.csv", header = T, sep = ",")
 
 
 ####Setting a column with the proper date format and df with non NA
-```{r STEP2, echo=TRUE}
+```{r STEP2, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 activity$date <- ymd(activity$date)
 activity2 <- subset(activity, !is.na(activity[,1]))
 ```
@@ -35,7 +36,7 @@ activity2 <- subset(activity, !is.na(activity[,1]))
 
 ##2. Histogram of the total number of steps taken each day
 ####Plotting data
-```{r STEP3, echo=TRUE}
+```{r STEP3, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 step_two <- aggregate(data=activity2, steps ~ date, FUN = "sum")
 hist(step_two$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 ```
@@ -43,7 +44,7 @@ hist(step_two$steps, main = "Histogram of the total number of steps taken each d
 
 ##3. Mean and median number of steps taken each day
 ####Setting Mean and Median
-```{r STEP4, echo=TRUE}
+```{r STEP4, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 mean(step_two$steps)
 median(step_two$steps)
 ```
@@ -51,7 +52,7 @@ median(step_two$steps)
 
 ##4. Time series plot of the average number of steps taken
 ####Aggregating data and setting ggplot
-```{r STEP5, echo=TRUE}
+```{r STEP5, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 step_interval <- aggregate(data=activity2, steps ~ interval, FUN = "mean")
 ggplot(step_interval, aes(x=interval, y=steps)) + geom_line(color="steelblue", size=0.5) + labs(title="Time series plot of the average number of steps taken", x="Set Interval", y="Avg. Number of Steps") + theme_minimal()
 ```
@@ -59,7 +60,7 @@ ggplot(step_interval, aes(x=interval, y=steps)) + geom_line(color="steelblue", s
 
 ##The 5-minute interval that, on average, contains the maximum number of steps
 ####Setting code
-```{r STEP6, echo=TRUE}
+```{r STEP6, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 info <- step_interval[which.max(step_interval$steps),]
 info1 <- info$interval
 info2 <- info$steps
@@ -70,7 +71,7 @@ The number `r info1` interval has the most number of steps (max), with
 
 ##Code to describe and show a strategy for imputing missing data
 ####Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NA
-```{r STEP7, echo=TRUE}
+```{r STEP7, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 sum(is.na(activity))
 ```
 2304 missing values exist in the dataset provided
@@ -79,7 +80,7 @@ sum(is.na(activity))
 We will proceed to fill in the missing values with the average steps of the available data. 
 
 ####Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r STEP8, echo=TRUE}
+```{r STEP8, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 activity3 <- subset(activity, is.na(activity[,1]))
 activity4 <- merge(activity3, step_interval, by="interval")
 activity5 <- select(activity4, c(4, 3, 1))
@@ -88,8 +89,8 @@ activity_final <- rbind(activity2,activity5)
 sum(is.na(activity_final))
 ```
 
-####Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-```{r STEP9, echo=TRUE}
+####Make a histogram of the total number of steps taken each day
+```{r STEP9, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 step_nine <- aggregate(data=activity_final, steps ~ date, FUN = "sum")
 hist(step_nine$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 mean(step_nine$steps)
@@ -99,8 +100,8 @@ Setting up the non-missing values with average values generates a bias towards n
 
 
 ##Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
-####Create a new factor variable in the dataset with two levels ??? weekday and weekend indicating whether a given date is a weekday or weekend day.
-```{r STEP10, echo=TRUE}
+####Create a new factor variable in the dataset
+```{r STEP10, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 activity2$week <- weekdays(activity2$date)
 activity2$weekcat <- ""
 activity2[activity2$week == "Saturday" | activity2$week == "Sunday", ]$weekcat <- "weekend"
@@ -108,8 +109,7 @@ activity2[!(activity2$week == "Saturday" | activity2$week == "Sunday"), ]$weekca
 activity2$weekcat <- factor(activity2$weekcat)
 ```
 
-####Make a panel plot containing a time series plot (i.e. ???????????????? = "????") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
-```{r STEP11, echo=TRUE}
+```{r STEP11, echo=TRUE, dpi=36, out.width="600px", out.height="600px"}
 step_eleven <- aggregate(data=activity2, steps ~ interval + weekcat, FUN=mean)
 xyplot(steps ~ interval | weekcat, data = step_eleven, type = "l", lwd = 2,
        layout = c(1, 2), 
