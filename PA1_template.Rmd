@@ -1,10 +1,7 @@
 ---
 output: 
   html_document: 
-    fig_height: 4
-    fig_width: 6
     keep_md: yes
-    toc_depth: 3
 ---
 #Peer-graded Assignment: Course Project 1
 
