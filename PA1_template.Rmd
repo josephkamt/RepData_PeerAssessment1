@@ -1,6 +1,8 @@
 ---
 output: 
   html_document: 
+    fig_height: 3
+    fig_width: 5
     keep_md: yes
 ---
 #Peer-graded Assignment: Course Project 1

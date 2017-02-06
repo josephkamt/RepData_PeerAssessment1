@@ -30,7 +30,7 @@ step_two <- aggregate(data=activity2, steps ~ date, FUN = "sum")
 hist(step_two$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 ```
 
-![](PA1_template_files/figure-html/STEP3-1.png)<!-- -->
+![](PA1_Template_files/figure-html/STEP3-1.png)<!-- -->
 
 
 ##3. Mean and median number of steps taken each day
@@ -61,7 +61,7 @@ step_interval <- aggregate(data=activity2, steps ~ interval, FUN = "mean")
 ggplot(step_interval, aes(x=interval, y=steps)) + geom_line(color="steelblue", size=0.5) + labs(title="Time series plot of the average number of steps taken", x="Set Interval", y="Avg. Number of Steps") + theme_minimal()
 ```
 
-![](PA1_template_files/figure-html/STEP5-1.png)<!-- -->
+![](PA1_Template_files/figure-html/STEP5-1.png)<!-- -->
 
 
 ##The 5-minute interval that, on average, contains the maximum number of steps
@@ -113,7 +113,7 @@ step_nine <- aggregate(data=activity_final, steps ~ date, FUN = "sum")
 hist(step_nine$steps, main = "Histogram of the total number of steps taken each day", col="steelblue", xlab="Number of Steps", breaks=20)
 ```
 
-![](PA1_template_files/figure-html/STEP9-1.png)<!-- -->
+![](PA1_Template_files/figure-html/STEP9-1.png)<!-- -->
 
 ```r
 mean(step_nine$steps)
@@ -154,5 +154,5 @@ xyplot(steps ~ interval | weekcat, data = step_eleven, type = "l", lwd = 2,
        main = "Steps Taken Per 5-minute Intervals Across Weekdays and Weekends")
 ```
 
-![](PA1_template_files/figure-html/STEP11-1.png)<!-- -->
+![](PA1_Template_files/figure-html/STEP11-1.png)<!-- -->
 
