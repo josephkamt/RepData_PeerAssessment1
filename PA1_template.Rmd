@@ -1,3 +1,11 @@
+---
+output:
+  pdf_document: default
+---
+output:
+  pdf_document:
+    dev: png
+
 #Peer-graded Assignment: Course Project 1
 
 ```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
